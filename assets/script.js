@@ -2,14 +2,6 @@
 var generateBtn = document.querySelector("#generate");
 
 // Write password to the #password input
-function writePassword() {
-  passLength();
-  var password = generatePassword();
-  var passwordText = document.querySelector("#password");
-
-  // passwordText.value = password;
-
-}
 
 var passLength = function() {
   var passQuestionLength = prompt("How many characters would you like your password to have? (You must have at least 8, with a maximum of 128.)");
@@ -23,42 +15,71 @@ var passLength = function() {
     return passLength();
   }
   else {
-    passCharType();
+    passCharType(passQuestionLength);
   }
 }
 
-var passCharType = function() {
+var passCharType = function(passQuestionLength) {
+
   var passLowercase = confirm("Would you like your password to contain lowercase letters?");
-  if (passLowercase) {
-    console.log('lowercase');
-  } else {
-    console.log('noLowercase');
-  }
-
-  var passUppercase = confirm("Would you like your password to contain UPPSERCASE letters?");
-  if (passUppercase) {
-    console.log('uppercase');
-  } else {
-    console.log('noUppercase');
-  }
-
+  var passUppercase = confirm("Would you like your password to contain UPPERCASE letters?");
   var passNumeric = confirm("Would you like your password to numbers?");
-  if (passNumeric) {
-    console.log('numbers');
-  } else {
-    console.log('noNumbers');
-  }
-
   var passSymbol = confirm("Would you like your password to contain symbols?");
-  if (passSymbol) {
-    console.log('symbols');
-  } else {
-    console.log('noSymbols');
-  }
-  console.log(passLowercase, passUppercase, passNumeric, passSymbol);
+
+  var password = {
+    length: passQuestionLength,
+    lowercase: passLowercase,
+    uppercase: passUppercase,
+    numeric: passNumeric,
+    symbols: passSymbol
+  };
+  passwordGen(password);
 }
 
+var passwordGen = function(password) {
+  var charNumber = password.length;
+  
+  if (password.lowercase) {
+    var finalPass = 'abcdefghijklmnopqrstuvwxyz';
+  } else {
+    var finalPass = ''
+  }
+
+  if (password.uppercase) {
+    finalPass += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  } else {
+    finalPass += '';
+  }
+
+  if (password.Numeric) {
+    finalPass += '0123456789';
+  } else {
+    finalPass += '';
+  }
+
+  if (password.symbols) {
+    finalPass += '@#$%^&*';
+  } else {
+    finalPass += '';
+  }
+  randomizer(finalPass, charNumber);
+}
+
+var randomizer = function(finalPass, charNumber) {
+  var charFinal = finalPass;
+  var passwordLength = charNumber;
+  var finalPassword = '';
+  for (var i=0; i<passwordLength; i++) {
+    var rnum = Math.floor(Math.random() * charFinal.length);
+    finalPassword += charFinal.substring(rnum,rnum+1);
+  }
+  enterPassword(finalPassword);
+}
+
+function enterPassword(finalPassword) {
+  var passwordText = document.querySelector("#password");
+  passwordText.value = finalPassword;
+}
 
 // Add event listener to generate button
-generateBtn.addEventListener("click", writePassword);
-
+generateBtn.addEventListener("click", passLength);
